@@ -24,7 +24,7 @@
 class PN5180FeliCa : public PN5180 {
 
 public:
-  PN5180FeliCa(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin);
+  PN5180FeliCa(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass& bus);
 
 public:
   uint8_t pol_req(uint8_t *buffer);

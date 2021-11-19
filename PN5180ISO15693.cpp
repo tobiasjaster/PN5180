@@ -22,8 +22,8 @@
 #include "PN5180ISO15693.h"
 #include "Debug.h"
 
-PN5180ISO15693::PN5180ISO15693(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin)
-              : PN5180(SSpin, BUSYpin, RSTpin) {
+PN5180ISO15693::PN5180ISO15693(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass& bus)
+              : PN5180(SSpin, BUSYpin, RSTpin, bus) {
 }
 
 /*
@@ -482,6 +482,35 @@ ISO15693ErrorCode PN5180ISO15693::newpasswordICODESLIX2(uint8_t *newpassword, ui
   
   return rc;
 
+}
+
+
+// disable privacy mode for ICODE SLIX2 tag with given password
+ISO15693ErrorCode PN5180ISO15693::disablePrivacyMode(uint8_t *password) {
+  // get a random number from the tag
+  uint8_t random[]= {0x00, 0x00};
+  ISO15693ErrorCode rc = getRandomNumber(random);
+  if (rc != ISO15693_EC_OK) {
+    return rc;
+  }
+  
+  // set password to disable privacy mode 
+  rc = setPassword(0x04, password, random);
+  return rc; 
+}
+
+// enable privacy mode for ICODE SLIX2 tag with given password 
+ISO15693ErrorCode PN5180ISO15693::enablePrivacyMode(uint8_t *password) {
+  // get a random number from the tag
+  uint8_t random[]= {0x00, 0x00};
+  ISO15693ErrorCode rc = getRandomNumber(random);
+  if (rc != ISO15693_EC_OK) {
+    return rc;
+  }
+  
+  // enable privacy command to lock the tag
+  rc = enablePrivacy(password, random);
+  return rc; 
 }
 
 

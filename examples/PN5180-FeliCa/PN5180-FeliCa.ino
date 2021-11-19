@@ -74,6 +74,7 @@
 
 //#define WRITE_ENABLED 1
 
+#include <SPI.h>
 #include <PN5180.h>
 #include <PN5180FeliCa.h>
 
@@ -93,7 +94,7 @@
 #error Please define your pinout here!
 #endif
 
-PN5180FeliCa nfc(PN5180_NSS, PN5180_BUSY, PN5180_RST);
+PN5180FeliCa nfc(PN5180_NSS, PN5180_BUSY, PN5180_RST, &SPI);
 
 void setup() {
   Serial.begin(115200);
@@ -101,6 +102,7 @@ void setup() {
   Serial.println(F("Uploaded: " __DATE__ " " __TIME__));
   Serial.println(F("PN5180 FeliCa Demo Sketch"));
 
+  SPI.begin();
   nfc.begin();
 
   Serial.println(F("----------------------------------"));
