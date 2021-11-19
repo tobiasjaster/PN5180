@@ -415,7 +415,10 @@ bool PN5180::setRF_on() {
   transceiveCommand(cmd, 2);
   SPI.endTransaction();
 
-  while (0 == (TX_RFON_IRQ_STAT & getIRQStatus())); // wait for RF field to set up
+  unsigned long startedWaiting = millis();
+  while (0 == (TX_RFON_IRQ_STAT & getIRQStatus())) {   // wait for RF field to set up (max 500ms)
+    if (millis() - startedWaiting > 500) return false; 
+  }; 
   clearIRQStatus(TX_RFON_IRQ_STAT);
   return true;
 }
@@ -536,12 +539,25 @@ bool PN5180::transceiveCommand(uint8_t *sendBuffer, size_t sendBufferLen, uint8_
  * Reset NFC device
  */
 void PN5180::reset() {
+  uint32_t commandTimeout = 2000
   digitalWrite(PN5180_RST, LOW);  // at least 10us required
   delay(10);
   digitalWrite(PN5180_RST, HIGH); // 2ms to ramp up required
   delay(10);
 
-  while (0 == (IDLE_IRQ_STAT & getIRQStatus())); // wait for system to start up
+  unsigned long startedWaiting = millis();
+  while (0 == (IDLE_IRQ_STAT & getIRQStatus())) { // wait for system to start up (with timeout)
+    if (millis() - startedWaiting > commandTimeout) {
+		  PN5180DEBUG(F("reset failed (timeout)!!!\n")); // try again with larger time
+		  digitalWrite(PN5180_RST, LOW);  
+		  delay(10);
+		  digitalWrite(PN5180_RST, HIGH); 
+		  delay(50);
+  	}
+    if (millis() - startedWaiting > 2*commandTimeout) {
+      break;
+    }
+  }
 
   clearIRQStatus(0xffffffff); // clear all flags
 }
