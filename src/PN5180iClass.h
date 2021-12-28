@@ -40,7 +40,7 @@ enum iClassErrorCode {
 class PN5180iClass : public PN5180 {
 
 public:
-  PN5180iClass(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass& bus);
+  PN5180iClass(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass *bus);
 
 private:
   iClassErrorCode issueiClassCommand(uint8_t *cmd, uint8_t cmdLen, uint8_t **resultPtr);

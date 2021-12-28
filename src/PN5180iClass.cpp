@@ -22,7 +22,7 @@
 #include "PN5180iClass.h"
 #include "Debug.h"
 
-PN5180iClass::PN5180iClass(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass& bus) 
+PN5180iClass::PN5180iClass(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass *bus) 
               : PN5180(SSpin, BUSYpin, RSTpin, bus) {
 }
 

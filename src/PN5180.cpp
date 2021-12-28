@@ -39,7 +39,7 @@
 
 uint8_t PN5180::readBuffer[508];
 
-PN5180::PN5180(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass& bus) {
+PN5180::PN5180(uint8_t SSpin, uint8_t BUSYpin, uint8_t RSTpin, SPIClass *bus) {
   PN5180_NSS = SSpin;
   PN5180_BUSY = BUSYpin;
   PN5180_RST = RSTpin;
@@ -530,7 +530,7 @@ bool PN5180::transceiveCommand(uint8_t *sendBuffer, size_t sendBufferLen, uint8_
  * Reset NFC device
  */
 void PN5180::reset() {
-  uint32_t commandTimeout = 2000
+  uint32_t commandTimeout = 2000;
   digitalWrite(PN5180_RST, LOW);  // at least 10us required
   delay(10);
   digitalWrite(PN5180_RST, HIGH); // 2ms to ramp up required
