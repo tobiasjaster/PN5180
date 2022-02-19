@@ -495,7 +495,7 @@ ISO15693ErrorCode PN5180ISO15693::disablePrivacyMode(uint8_t *password) {
   }
   
   // set password to disable privacy mode 
-  rc = setPassword(0x04, password, random);
+  rc = setPassword(password, random);
   return rc; 
 }
 
